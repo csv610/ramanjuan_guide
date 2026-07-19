@@ -1,0 +1,373 @@
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath,amssymb}
+\usepackage{hyperref}
+\usepackage[margin=1in]{geometry}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{booktabs}
+\usepackage{inconsolata}
+\usepackage{graphicx}
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstset{
+    backgroundcolor=\color{backcolour},
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{blue},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\small,
+    breakatwhitespace=false,
+    breaklines=true,
+    captionpos=b,
+    keepspaces=true,
+    numbers=left,
+    numbersep=5pt,
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    tabsize=4,
+    language=Python
+}
+
+\title{\textbf{Student's Companion Guide: \\ Exploring Ramanujan's Mathematics with Python}}
+\author{\textbf{Chaman Singh Verma}}
+\date{July 19, 2026}
+
+\begin{document}
+
+\maketitle
+
+Welcome! This guide is a student-friendly companion to the formal paper on Srinivasa Ramanujan's mathematical discoveries. 
+
+While academic papers use advanced university-level mathematics, this guide is written to be accessible to high school students. It explains the core concepts using high-school algebra, visual examples, and simple Python code. By combining mathematics with programming, you can see these deep discoveries come to life on your own computer!
+
+\section{Topic Roadmap}
+The table below provides a quick reference to the topics covered in this guide, matching each mathematical concept with its Python implementation and real-world application.
+
+\begin{table}[h!]
+\centering
+\small
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{llll}
+\toprule
+\textbf{Topic} & \textbf{Core Math Concept} & \textbf{Python Function} & \textbf{Real-World Application} \\
+\midrule
+1. Pi Series & Infinite series convergence & \texttt{ramanujan\_pi} & High-precision constants \\
+2. Partitions & Divisibility under mod arithmetic & \texttt{check\_ramanujan\_congruences} & Combinatorial counting \\
+3. Identities & Euler partition bijections & \texttt{check\_rogers\_ramanujan\_identity} & Algebra \& representation theory \\
+4. Fractions & Nested fraction stability & \texttt{demo\_rr\_continued\_fraction} & Floating-point numerical tools \\
+5. Divisors \& HCN & Factors \& primality exponents & \texttt{demo\_divisors\_and\_hcn} & FFT data chunking in DSP \\
+6. Mock Theta & Near-symmetric automorphic forms & \texttt{demo\_mock\_theta\_like} & Black hole entropy in physics \\
+7. Tau Function & Coefficients of modular forms & \texttt{demo\_tau\_function} & The Langlands Program \\
+\bottomrule
+\end{tabular}%
+}
+\caption{Roadmap of Ramanujan's concepts explored in this guide.}
+\label{tab:roadmap}
+\end{table}
+
+---
+
+\section{Getting Started: How to Run the Code}
+
+All of the mathematical concepts discussed in this guide are implemented in the Python program \texttt{ramanujan\_codes.py}.
+
+To run the interactive demonstration on your computer:
+\begin{enumerate}
+    \item Open your terminal (macOS/Linux) or Command Prompt (Windows).
+    \item Navigate to the folder containing the project files.
+    \item Execute the following command:
+    \begin{lstlisting}[language=bash,numbers=none]
+python3 ramanujan_codes.py
+    \end{lstlisting}
+\end{enumerate}
+This will execute a suite of calculations and print out the numerical results explained below.
+
+---
+
+\section{Ramanujan's Series for \texorpdfstring{$\pi$}{pi}}
+
+\subsection{The Concept}
+You probably know that $\pi$ (pi) is the ratio of a circle's circumference to its diameter, which is approximately $3.14159$. Because $\pi$ is an \emph{irrational} number, its decimal expansion goes on forever without repeating.
+
+Mathematicians use \textbf{infinite series}---formulas that add up an infinite list of fractions---to calculate $\pi$ to millions of decimal places. Ramanujan discovered several extremely rapid formulas for calculating the reciprocal of $\pi$ ($1/\pi$).
+
+\subsection{How it Works}
+Ramanujan's most famous series for $1/\pi$ is:
+\[
+\frac{1}{\pi} = \frac{2\sqrt{2}}{9801} \sum_{n=0}^{\infty} \frac{(4n)! (1103 + 26390n)}{(n!)^4 396^{4n}}
+\]
+\begin{itemize}
+    \item The symbol $!$ means factorial (e.g., $4! = 4 \times 3 \times 2 \times 1 = 24$).
+    \item The symbol $\sum$ means ``sum up'' all terms as $n$ goes from $0$ to infinity.
+\end{itemize}
+Each term of this sum is a fraction. As $n$ increases, the denominator grows incredibly fast because of the term $396^{4n}$. This means each new term in the sum is tiny, adding exactly \textbf{8 correct decimal places} to the approximation of $\pi$!
+
+\subsection{Running in Python}
+In \texttt{ramanujan\_codes.py}, the function \texttt{ramanujan\_pi(terms)} computes this sum:
+\begin{lstlisting}
+# Calculate pi using 3 terms of the series
+pi_approx = ramanujan_pi(terms=3)
+print(pi_approx) 
+# Output: 3.1415926535897932384626... (highly accurate!)
+\end{lstlisting}
+
+---
+
+\section{Partition Numbers \& Congruences}
+
+\subsection{The Concept}
+A \textbf{partition} of a positive integer $n$ is a way of writing $n$ as a sum of positive integers, where the order of the terms does not matter. The \textbf{partition function} $p(n)$ counts the number of ways to do this.
+
+For example, let's partition the number $4$:
+\begin{enumerate}
+    \item $4$
+    \item $3 + 1$
+    \item $2 + 2$
+    \item $2 + 1 + 1$
+    \item $1 + 1 + 1 + 1$
+\end{enumerate}
+There are exactly $5$ ways, so $p(4) = 5$.
+
+\subsection{Ramanujan's Congruences (Divisibility Rules)}
+Ramanujan noticed that partition numbers grow extremely fast:
+\begin{itemize}
+    \item $p(10) = 42$
+    \item $p(50) = 204,226$
+    \item $p(100) = 190,569,292$
+\end{itemize}
+Despite this rapid, irregular growth, Ramanujan discovered three beautiful divisibility rules (congruences) that hold true for \emph{every} non-negative index $k$:
+\begin{enumerate}
+    \item \textbf{Rule of 5:} $p(5k + 4)$ is always divisible by $5$.
+    \begin{itemize}
+        \item \emph{Example ($k=0$):} $p(4) = 5$ (divisible by 5)
+        \item \emph{Example ($k=1$):} $p(9) = 30$ (divisible by 5)
+    \end{itemize}
+    \item \textbf{Rule of 7:} $p(7k + 5)$ is always divisible by $7$.
+    \begin{itemize}
+        \item \emph{Example ($k=0$):} $p(5) = 7$ (divisible by 7)
+    \end{itemize}
+    \item \textbf{Rule of 11:} $p(11k + 6)$ is always divisible by $11$.
+    \begin{itemize}
+        \item \emph{Example ($k=0$):} $p(6) = 11$ (divisible by 11)
+    \end{itemize}
+\end{enumerate}
+
+\subsection{Running in Python}
+You can check these rules up to $n=100$ by running the congruence check function in Python:
+\begin{lstlisting}
+check_ramanujan_congruences(limit=100)
+\end{lstlisting}
+
+---
+
+\section{The Rogers--Ramanujan Identities}
+
+\subsection{The Concept}
+Imagine you have a bag of numbers, and you want to partition a number $n$ under two completely different rules:
+\begin{itemize}
+    \item \textbf{Rule A:} You can partition $n$ using any numbers, but the numbers you choose must differ by \textbf{at least 2} (e.g., if you use $3$, you cannot use $4$, but you can use $5$).
+    \item \textbf{Rule B:} You can partition $n$ using any numbers, but you are \textbf{only allowed to use numbers ending in 1, 4, 6, or 9} (numbers congruent to $\pm 1 \pmod{5}$).
+\end{itemize}
+
+Let's try this for $n=9$:
+\begin{itemize}
+    \item \textbf{Rule A Partitions:} $(9)$, $(8+1)$, $(7+2)$, $(6+3)$, $(5+3+1)$ $\to$ \textbf{5 ways}
+    \item \textbf{Rule B Partitions:} $(9)$, $(6+1+1+1)$, $(4+4+1)$, $(4+1+1+1+1+1)$, $(1+1+1+1+1+1+1+1+1)$ $\to$ \textbf{5 ways}
+\end{itemize}
+Even though the rules are completely different, they produce the \textbf{exact same number of partitions}! The Rogers--Ramanujan identities state that this equivalence holds true for \emph{every single integer} $n$ forever.
+
+\subsection{Running in Python}
+In \texttt{ramanujan\_codes.py}, we verify this by expanding both rules as polynomials and comparing the coefficients (representing the number of partitions) up to degree 40:
+\begin{lstlisting}
+check_rogers_ramanujan_identity(max_deg=40)
+# Outputs: Match = True for all terms!
+\end{lstlisting}
+
+---
+
+\section{Continued Fractions}
+
+\subsection{The Concept}
+A \textbf{continued fraction} is a number written as a fraction nested inside the denominator of another fraction, going on forever:
+\[
+R(q) = \cfrac{q^{1/5}}{1 + \cfrac{q}{1 + \cfrac{q^2}{1 + \cfrac{q^3}{1 + \ddots}}}}
+\]
+Unlike normal infinite sums, continued fractions are incredibly stable. Computers use continued fractions to evaluate complex functions (like sines, cosines, or statistical curves) quickly and accurately.
+
+\subsection{Running in Python}
+You can watch the fraction converge as we calculate it deeper and deeper:
+\begin{lstlisting}
+demo_rr_continued_fraction(q=0.2)
+# Output:
+# depth=  5 -> R(0.2) = 0.607833000...
+# depth= 20 -> R(0.2) = 0.607849829...
+# depth=100 -> R(0.2) = 0.607849829... (fully converged!)
+\end{lstlisting}
+
+---
+
+\section{Divisors \& Highly Composite Numbers}
+
+\subsection{The Concept}
+\begin{itemize}
+    \item \textbf{Divisors:} The divisors of a number are the integers that divide it evenly. For example, the divisors of $6$ are $1, 2, 3,$ and $6$. The divisor count function $d(n)$ counts these divisors, so $d(6) = 4$.
+    \item \textbf{Highly Composite Numbers (HCNs):} A highly composite number is a positive integer that has \textbf{more divisors than any number smaller than it}. You can think of them as the ``most divisible'' numbers.
+    \begin{itemize}
+        \item $12$ has $6$ divisors ($1, 2, 3, 4, 6, 12$). Since no number below $12$ has $6$ or more divisors, $12$ is highly composite.
+    \end{itemize}
+\end{itemize}
+
+\subsection{Real-World Application}
+Highly composite numbers are extremely useful in computer science, specifically for the \textbf{Fast Fourier Transform (FFT)} algorithm, which processes sound and image data. Dividing data into equal chunks is much faster if the total size of your dataset is a highly composite number (like $60$ or $120$) because it can be split in many different ways.
+
+---
+
+\section{Mock Theta Functions}
+
+\subsection{The Concept}
+A \textbf{mock theta function} is a complex mathematical function defined by an infinite series. They behave almost like modular forms---which have a high degree of symmetry---but they are missing a specific piece.
+
+Ramanujan discovered them on his deathbed in 1920. He wrote about them in his final letter to G. H. Hardy, but could not formally define them. They remained one of the biggest mysteries in mathematics until 2002, when researchers finally understood their structure.
+
+\subsection{Black Hole Connections}
+In modern physics, mock theta functions are used in \textbf{string theory} to count the quantum states of energy (microstates) inside a \textbf{black hole}. This allows physicists to calculate black hole entropy, helping bridge the gap between Einstein's gravity and quantum mechanics.
+
+---
+
+\section{The Ramanujan Tau Function}
+
+\subsection{The Concept}
+The Ramanujan tau function $\tau(n)$ is a rule that assigns an integer to every number $n$. They appear as the coefficients of a special infinite product:
+\[
+\Delta(q) = q(1-q)^{24}(1-q^2)^{24}(1-q^3)^{24}\cdots = \sum_{n=1}^{\infty} \tau(n) q^n
+\]
+The first few values are $\tau(1) = 1$, $\tau(2) = -24$, $\tau(3) = 252$, and $\tau(4) = -1472$.
+
+\subsection{Multiplicativity}
+Ramanujan discovered that if you pick two coprime numbers $m$ and $n$ (meaning they share no common factors other than 1), then:
+\[
+\tau(m \times n) = \tau(m) \times \tau(n)
+\]
+\emph{Example:} $\tau(2) \times \tau(3) = (-24) \times 252 = -6048$, which is exactly $\tau(6) = -6048$.
+
+\subsection{Running in Python}
+You can compute and verify these properties in Python:
+\begin{lstlisting}
+demo_tau_function()
+\end{lstlisting}
+
+---
+
+\section{Lab Exercises, Experiments, and Explorations}
+
+This section contains a collection of computational experiments and mathematical problems designed to deepen your understanding. You can write small Python scripts or modify the functions inside \texttt{ramanujan\_codes.py} to solve them.
+
+\subsection{Topic 1: Series for $\pi$}
+\begin{enumerate}
+    \item \textbf{Rate of Convergence Experiment:} Run the function \texttt{ramanujan\_pi} with $1, 2, 3,$ and $4$ terms. Write a script to calculate the absolute error $| \text{ramanujan\_pi(t)} - \pi |$ at each step (using Python's \texttt{math.pi} as the reference). Verify that each term reduces the error by a factor of roughly $10^{-8}$.
+    \item \textbf{The Chudnovsky Series Exploration:} Research the Chudnovsky algorithm, which was published in 1989 and is currently used to set world records for calculating $\pi$. How does it relate to Ramanujan's formula? Write a short paragraph explaining the structural similarities.
+\end{enumerate}
+
+\subsection{Topic 2: Partition Congruences}
+\begin{enumerate}
+    \item \textbf{Congruence Loop Experiment:} Write a Python loop that computes $p(n)$ up to $n=200$, and prints out $p(5k+4) \pmod 5$, $p(7k+5) \pmod 7$, and $p(11k+6) \pmod{11}$ for all possible integers $k$. Verify that the remainder is always zero.
+    \item \textbf{Manual Partition Exploration:} List all the partitions of $n=5$ by hand (there should be $p(5)=7$ of them). Then, verify Ramanujan's modulo $7$ congruence: since $5 = 7(0) + 5$, $p(5)$ must be divisible by $7$. Confirm that the total number of partitions you wrote down is indeed divisible by $7$.
+\end{enumerate}
+
+\subsection{Topic 3: The Rogers--Ramanujan Identities}
+\begin{enumerate}
+    \item \textbf{Partition Verification Experiment:} For $n=5$, list all partitions that satisfy Rule A (parts differ by at least 2) and all partitions that satisfy Rule B (parts congruent to $\pm 1 \pmod 5$). Verify that both lists contain the exact same number of partitions.
+    \item \textbf{The Second Rogers--Ramanujan Identity Exploration:} The second Rogers--Ramanujan identity states that partitions into parts differing by at least 2 with no part equal to 1 are equinumerous to partitions into parts congruent to $\pm 2 \pmod 5$. Write a Python function to verify this identity up to $n=20$.
+\end{enumerate}
+
+\subsection{Topic 4: Continued Fractions}
+\begin{enumerate}
+    \item \textbf{Speed of Convergence Experiment:} The convergence speed of the Rogers--Ramanujan continued fraction $R(q)$ depends heavily on $q$. Run \texttt{rogers\_ramanujan\_continued\_fraction(q, depth)} for $q=0.1, 0.5,$ and $0.9$ with depths from 1 to 20. Observe and record how the convergence rate slows down as $q$ approaches $1$.
+    \item \textbf{Golden Ratio Exploration:} A remarkable result discovered by Ramanujan is that when $q=1$, the Rogers--Ramanujan continued fraction is directly related to the Golden Ratio $\phi = \frac{1+\sqrt{5}}{2}$ by the formula:
+    \[
+    R(1) = \frac{\sqrt{5}-1}{2} = \phi - 1
+    \]
+    Evaluate $R(1)$ numerically using your continued fraction code for depth $d=100$, and verify that it matches $\phi - 1 \approx 0.6180339887$.
+\end{enumerate}
+
+\subsection{Topic 5: Highly Composite Numbers}
+\begin{enumerate}
+    \item \textbf{Perfect Numbers Experiment:} A perfect number is a positive integer that is equal to the sum of its proper positive divisors (excluding the number itself). For example, $6 = 1 + 2 + 3$ is perfect. Write a Python function to find all perfect numbers under $10,000$. (Hint: Use the \texttt{sigma(n)} function!)
+    \item \textbf{Prime Exponent Exploration:} Verify Ramanujan's factorization theorem for Highly Composite Numbers: for every HCN, the prime exponents in its factorization must be non-increasing (e.g., in $n = 2^{a_2} 3^{a_3} 5^{a_5} \dots$, we must have $a_2 \ge a_3 \ge a_5 \dots$). Find the factorizations of $12, 24, 36, 48,$ and $60$, and verify this property.
+\end{enumerate}
+
+\subsection{Topic 6: Mock Theta Functions}
+\begin{enumerate}
+    \item \textbf{Maass Form Symmetries Exploration:} Research why mock theta functions are described as having ``mock'' modular symmetry. In a short paragraph, explain what a modular form is and why mock theta functions are considered to be modular forms that are ``missing'' a piece.
+\end{enumerate}
+
+\subsection{Topic 7: The Ramanujan Tau Function}
+\begin{enumerate}
+    \item \textbf{Non-Coprime Failure Experiment:} Ramanujan's multiplicativity states that $\tau(mn) = \tau(m)\tau(n)$ only when $\gcd(m,n)=1$. Write a Python script to check what happens when $m=2$ and $n=2$ (which are not coprime). Calculate $\tau(4)$ and compare it to $\tau(2) \times \tau(2)$. Does the multiplicativity rule still hold?
+    \item \textbf{Tau Prime Power Recurrence Experiment:} For prime powers, the tau function satisfies the recurrence relation $\tau(p^r) = \tau(p)\tau(p^{r-1}) - p^{11}\tau(p^{r-2})$ for $r \ge 2$. Write a Python script to verify this relation for $p=2, r=2$ and $p=2, r=3$.
+\end{enumerate}
+
+\section{Hints and Selected Answers}
+
+\subsection{Topic 1: Series for $\pi$}
+\begin{itemize}
+    \item \textbf{Hint (1):} In your script, import \texttt{math} and use \texttt{math.pi}. Loop over \texttt{terms = [1, 2, 3, 4]}, calculate the value using \texttt{ramanujan\_pi(terms, precision=100)}, convert it to float via \texttt{float()}, and calculate the absolute difference.
+    \item \textbf{Answer (2):} Both formulas represent $1/\pi$ as a sum of terms involving factorials, large powers in the denominator, and linear terms in $n$. The Chudnovsky series is based on similar modular transformations but uses $53360$ and $640320^{3n}$ (based on the $j$-invariant of $\sqrt{-163}$), yielding $14$ correct digits per term.
+\end{itemize}
+
+\subsection{Topic 2: Partition Congruences}
+\begin{itemize}
+    \item \textbf{Hint (1):} Write a loop like:
+    \begin{lstlisting}
+p = partition_numbers(200)
+for k in range(40):
+    n5 = 5 * k + 4
+    if n5 < len(p):
+        print(f"p({n5}) mod 5 = {p[n5] % 5}")
+    \end{lstlisting}
+    Repeat similarly for $7k+5$ and $11k+6$.
+    \item \textbf{Answer (2):} The $p(5) = 7$ partitions are: $(5)$, $(4+1)$, $(3+2)$, $(3+1+1)$, $(2+2+1)$, $(2+1+1+1)$, and $(1+1+1+1+1)$. The total count is $7$, which is divisible by $7$ (satisfying the congruence for $k=0$).
+\end{itemize}
+
+\subsection{Topic 3: The Rogers--Ramanujan Identities}
+\begin{itemize}
+    \item \textbf{Answer (1):} For $n=5$, Rule A partitions are: $(5)$, $(4+1)$ $\to$ 2 ways. Rule B partitions are: $(4+1)$, $(1+1+1+1+1)$ $\to$ 2 ways. Both lists have size 2.
+    \item \textbf{Hint (2):} Use a logic similar to the sum-side builder but omit $n=1$ factor in polynomial multiplication, or filter partitions in a custom loop.
+\end{itemize}
+
+\subsection{Topic 4: Continued Fractions}
+\begin{itemize}
+    \item \textbf{Answer (1):} For $q=0.1$, the value converges to $0.518625$ within $5$ iterations. For $q=0.9$, the continued fraction converges much slower, requiring depth $\ge 50$ to stabilize.
+    \item \textbf{Answer (2):} Evaluating $R(1)$ at depth 100 yields approximately $0.618033988749$, which matches $\phi - 1 = \frac{\sqrt{5}-1}{2}$.
+\end{itemize}
+
+\subsection{Topic 5: Highly Composite Numbers}
+\begin{itemize}
+    \item \textbf{Hint (1):} Loop $n$ from $1$ to $10,000$. If \texttt{sigma(n) - n == n}, then $n$ is perfect. (Selected answers: $6, 28, 496, 8128$).
+    \item \textbf{Answer (2):} Factorizations:
+    $12 = 2^2 \times 3^1$ (exponents: $2 \ge 1$),
+    $24 = 2^3 \times 3^1$ (exponents: $3 \ge 1$),
+    $36 = 2^2 \times 3^2$ (exponents: $2 \ge 2$),
+    $48 = 2^4 \times 3^1$ (exponents: $4 \ge 1$),
+    $60 = 2^2 \times 3^1 \times 5^1$ (exponents: $2 \ge 1 \ge 1$).
+    In all cases, the prime exponents are non-increasing.
+\end{itemize}
+
+\subsection{Topic 6: Mock Theta Functions}
+\begin{itemize}
+    \item \textbf{Answer (1):} A modular form is a function on the complex upper half-plane with a high degree of symmetry under modular transformations. Mock theta functions mimic these transformation properties, but they do not satisfy them exactly; they are missing a non-holomorphic part. Once completed by adding a specific integral term, they form a mock modular form.
+\end{itemize}
+
+\subsection{Topic 7: The Ramanujan Tau Function}
+\begin{itemize}
+    \item \textbf{Answer (1):} For $m=2, n=2$, we have $\tau(4) = -1472$. However, $\tau(2) \times \tau(2) = (-24) \times (-24) = 576$. Since $-1472 \neq 576$, the multiplicativity rule fails when $m$ and $n$ are not coprime.
+    \item \textbf{Answer (2):} For $p=2, r=2$: $\tau(4) = \tau(2)\tau(2) - 2^{11}\tau(1) \implies -1472 = 576 - 2048$, which is correct.
+\end{itemize}
+
+\end{document}
