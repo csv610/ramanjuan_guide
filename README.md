@@ -1,38 +1,59 @@
-# 🚀 Symmetry, Black Holes, and Python: Verifying Ramanujan's Mathematics on a Modern Computer
+# Computational Verification of Ramanujan's Discoveries
 
-Can we use basic computer science to bridge the gap between high school algebra and the deepest theories of quantum physics?
+This repository contains a self-contained, publication-ready mathematical and computational package that verifies several major discoveries of G. H. Hardy's legendary collaborator, **Srinivasa Ramanujan (1887–1920)**.
 
-I have spent the last few weeks working on an interdisciplinary project: computationally verifying several of the major mathematical discoveries of G. H. Hardy's legendary collaborator, Srinivasa Ramanujan (1887–1920). Using pure Python (with zero external dependencies), I built a computational engine to test and verify his formulas across seven key mathematical domains:
-
-1. **Calculating π:** Simulating Ramanujan's 1914 infinite series, which converges so rapidly that every single term adds exactly 8 correct decimal places.
-
-2. **Partition Congruences:** Verifying the divisibility rules of partition numbers modulo 5, 7, and 11.
-
-3. **Rogers–Ramanujan Identities:** Equating two completely different partition counting methods using polynomial expansion.
-
-4. **Rogers–Ramanujan Continued Fractions:** Exploring the convergence of nested fractions to the Golden Ratio.
-
-5. **Divisor Functions & Highly Composite Numbers (HCNs):** Factoring numbers to find "highly divisible" integers, which are vital in modern Fast Fourier Transform (FFT) algorithms.
-
-6. **Mock Theta Functions:** Generating coefficients for functions that physicists now use to calculate black hole entropy in string theory.
-
-7. **The Ramanujan Tau Function:** Checking the multiplicative properties of coefficients that form a cornerstone of the Langlands Program (the "grand unified theory" of mathematics).
+The project combines historical mathematical theory with modern software engineering practices, providing a formal academic paper, a student-friendly laboratory guide, and an independent Python verification suite with zero external dependencies.
 
 ---
 
-### 📚 Bridging the Gap: The Student Companion Guide
+## 📂 Project Directory Structure
 
-Abstract mathematics can often feel intimidating. To make these profound ideas accessible to the next generation, I created a Student's Companion Guide alongside the formal academic paper.
+*   [ramanujan.tex](file:///Users/csv610/Projects/Ramanujan/ramanujan.tex) / [ramanujan.pdf](file:///Users/csv610/Projects/Ramanujan/ramanujan.pdf) — The formal academic paper, structured in standard AMS-LaTeX (`amsart`) format for arXiv preprints.
+*   [ramanujan_student_guide.tex](file:///Users/csv610/Projects/Ramanujan/ramanujan_student_guide.tex) / [ramanujan_student_guide.pdf](file:///Users/csv610/Projects/Ramanujan/ramanujan_student_guide.pdf) — An accessible, educational companion guide for high school and undergraduate students, featuring 11 computational lab exercises and explorations.
+*   [ramanujan_codes.py](file:///Users/csv610/Projects/Ramanujan/ramanujan_codes.py) — The core Python module containing all simulations, recurrences, and polynomial algebra helper functions.
+*   [test_ramanujan.py](file:///Users/csv610/Projects/Ramanujan/test_ramanujan.py) — A 15-test unit suite verifying the mathematical accuracy of all Python implementations.
 
-Written in LaTeX and designed for high school and undergraduate students, the guide explains the mathematics of Ramanujan's work using standard algebra, hands-on programming labs, and selected answers. By writing code, students can watch continued fractions converge and divisibility patterns emerge directly on their own screens.
+---
 
-### 🧪 Verification and Rigor
+## 🧬 Topics Verified & Explored
 
-To ensure absolute reproducibility, the codebase is fully verified by a 15-test unit suite. The formal paper is formatted in standard AMS-LaTeX style (`amsart`), making it ready for preprint archiving on arXiv.
+1.  **Ramanujan's Series for $\pi$:** Simulating the 1914 infinite series, which converges at a rate of 8 correct decimal places per term.
+2.  **Partition Numbers & Congruences:** Verifying Ramanujan's divisibility rules modulo $5$, $7$, and $11$.
+3.  **Rogers–Ramanujan Identities:** Demonstrating the bijection between partitions with parts differing by at least 2 and parts congruent to $\pm 1 \pmod 5$.
+4.  **Rogers–Ramanujan Continued Fractions:** Evaluating nested fraction convergence and its relation to the Golden Ratio ($\phi - 1$).
+5.  **Divisor Functions & Highly Composite Numbers (HCNs):** Identifying the "most divisible" numbers (e.g., $12$, $24$, $60$), which play key roles in Fast Fourier Transform (FFT) algorithms.
+6.  **Mock Theta Functions:** Generating coefficients for functions that modern physicists use to calculate black hole microstates and entropy in string theory.
+7.  **The Ramanujan Tau Function:** Checking multiplicative properties ($\tau(mn) = \tau(m)\tau(n)$) and verifying bounds ($\left|\tau(p)\right| \le 2p^{11/2}$) linked to the Langlands Program.
 
-If you are a mathematics educator, software engineer, or student interested in the intersection of coding and number theory, I would love to hear your thoughts.
+---
 
-- How are you using programming to teach mathematical thinking?
-- What is your favorite computational math problem to solve?
+## 🚀 Getting Started
 
-Let's connect!
+### Prerequisites
+You only need a standard installation of **Python 3.x** and a **LaTeX distribution** (like TeX Live, MacTeX, or MiKTeX) to compile the documents. No third-party Python packages are required.
+
+### 1. Run the Computational Demos
+To run the full suite of simulations and print out the numerical verifications:
+```bash
+python3 ramanujan_codes.py
+```
+
+### 2. Run the Unit Test Suite
+To verify the math functions against standard reference values:
+```bash
+python3 -m unittest test_ramanujan.py
+```
+
+### 3. Compile the Documents
+To compile the formal paper and the student guide to PDFs:
+```bash
+pdflatex ramanujan.tex
+pdflatex ramanujan_student_guide.tex
+```
+*(Note: It is recommended to compile twice to resolve cross-references correctly.)*
+
+---
+
+## ✍️ Author
+*   **Chaman Singh Verma** — Independent Researcher
+*   Email: [csv610@gmail.com](mailto:csv610@gmail.com)
