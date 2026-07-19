@@ -1,5 +1,7 @@
 # Computational Verification of Ramanujan's Discoveries
 
+![frontpage](frontpage.png)
+
 This repository contains a self-contained, publication-ready mathematical and computational package that verifies several major discoveries of G. H. Hardy's legendary collaborator, **Srinivasa Ramanujan (1887–1920)**.
 
 The project combines historical mathematical theory with modern software engineering practices, providing a formal academic paper, a student-friendly laboratory guide, and an independent Python verification suite with zero external dependencies.
